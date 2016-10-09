@@ -1,7 +1,7 @@
-#### Java Examples ####
-
+## Java Examples ##
+---
 UNDER CONSTRUCTION...
 
-### Change log ###
-
+###### Change log ######
+---
 [releases] Added on 09-10-2016
