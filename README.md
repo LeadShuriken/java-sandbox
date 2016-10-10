@@ -2,4 +2,4 @@
 ***UNDER CONSTRUCTION...***
 
 ###### Change log ######
-[releases] Added on 09-10-2016
+* [releases] Added on 09-10-2016
