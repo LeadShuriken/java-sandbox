@@ -5,6 +5,8 @@
  */
 package rain.graphics;
 
+import java.util.Random;
+
 /**
  *
  * @author Deian
@@ -12,17 +14,25 @@ package rain.graphics;
 public class Render {
 
     private final int width, height;
+    
+    public final int MAP_SIZE = 8;
+    public final int MASK_SIZE = MAP_SIZE - 1;
+    
     public int[] pixels;
+    public int[] tiles = new int[MAP_SIZE * MAP_SIZE];
 
-    int xtime = 100;
-    int ytime = 50;
-
-    int counter = 0;
+    private Random random = new Random();
 
     public Render(int width, int height) {
         this.height = height;
         this.width = width;
         pixels = new int[width * height]; // 50,400 ARRAY ELEMENTS
+
+        for (int i = 0; i < MAP_SIZE * MAP_SIZE; i++) {
+            tiles[i] = random.nextInt(0xffffff);
+        }
+
+        tiles[0] = 0x000000;
     }
 
     public void clear() {
@@ -31,24 +41,13 @@ public class Render {
         }
     }
 
-    public void render() {
-        counter++;
-        if (counter % 10 == 0) {
-            xtime++;
-        }
-        if (counter % 10 == 0) {
-            ytime++;
-        }
-
+    public void render(int xOffset, int yOffset) {
         for (int y = 0; y < height; y++) {
-            if (ytime < 0 || ytime >= height) {
-                break;
-            }
+            int yy = y + yOffset;
             for (int x = 0; x < width; x++) {
-                if (xtime < 0 || xtime >= width) {
-                    break;
-                }
-                pixels[xtime + ytime * width] = 0xff00ff;
+                int xx = x + xOffset;
+                int tileIndex = ((xx >> 4) & MASK_SIZE) + ((yy >> 4) & MASK_SIZE) * MAP_SIZE;
+                pixels[x + y * width] = tiles[tileIndex];
             }
         }
     }
