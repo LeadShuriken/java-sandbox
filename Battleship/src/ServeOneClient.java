@@ -1,12 +1,12 @@
-
-import java.io.*;
-import java.net.Socket;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+import java.io.*;
+import java.net.Socket;
+
 /**
  *
  * @author dsmis
@@ -31,6 +31,7 @@ class ServeOneClient extends Thread {
                 )
         ),
                 true);
+        
         gameLogic.addC(out);
         start();
     }
@@ -48,6 +49,7 @@ class ServeOneClient extends Thread {
             System.out.println("disconected a client. Total number " + gameLogic.nCl());
             socket.close();
         } catch (Exception e) {
+            
         }
     }
 }

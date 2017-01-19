@@ -4,47 +4,47 @@
  * and open the template in the editor.
  */
 
+import java.net.*;
+import java.io.*;
+import javax.swing.*;
+
 /**
  *
  * @author dsmis
  */
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-
 public class BattleShipClient extends Thread {
 
     private String PLAYER_NAME = "";
     private int PORT;
 
-    // IO HANDLERS //
+    // CONNECTION/COMUNICATION HANDLERS //
     private BufferedReader in;
     private PrintWriter out;
-
-    private BattleShipGUI gui;
-
-    // CONNECTION/COMUNICATION HANDLERS //
     private Socket socket;
 
+    private BattleShipGUI GUI;
+
     // CONNECTION/RECONNECTION HANDLERS // 
-    private int reconnections = 0;
     private static int MAX_RECONNECTIONS = 10;
+    private int RECONECTIONS = 0;
 
-    private BattleShipGameLogic gameLogic = null;
+    private BattleShipGameLogic GAME_LOGIC = null;
 
-    BattleShipClient(int PORT, BattleShipGameLogic gameLogic) {
+    BattleShipClient(int PORT) {
         this.PLAYER_NAME = JOptionPane.showInputDialog("Enter an new name.");
-        this.gameLogic = gameLogic;
-        this.PORT = PORT;
-        connect();
+        if (this.PLAYER_NAME != null) {
+            this.GAME_LOGIC = BattleShipServer.gameLogic;
+            this.PORT = PORT;
+            connect();
+        }
     }
 
     private void connect() {
         try {
             String server = null;
             InetAddress addr = InetAddress.getByName(server);
-            socket = new Socket(addr, this.PORT);
+
+            socket = new Socket(addr, PORT);
 
             in = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
@@ -52,20 +52,20 @@ public class BattleShipClient extends Thread {
             out = new PrintWriter(new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream())), true);
 
-            if (!gameLogic.getGameStatus()) {
-                System.out.println(this.PLAYER_NAME + ": connected... ");
-                this.gui = new BattleShipGUI(this.PLAYER_NAME, socket, in, out);
-                this.gui.setStage();
-                this.gameLogic.ClientsGUI.put(this.PLAYER_NAME, this.gui);
-                super.setName(this.PLAYER_NAME);
+            if (!GAME_LOGIC.getGameStatus()) {
+                System.out.println(PLAYER_NAME + ": connected... ");
+                GUI = new BattleShipGUI(PLAYER_NAME, socket, in, out);
+                GUI.changeButtonsState(false);
+                GAME_LOGIC.ClientsGUI.put(PLAYER_NAME, GUI);
+                super.setName(PLAYER_NAME);
                 start();
             }
         } catch (ConnectException e) {
             System.out.println(PLAYER_NAME + ": Error while connecting. " + e.getMessage());
-            this.tryToReconnect();
+            tryToReconnect();
         } catch (SocketTimeoutException e) {
-            System.out.println(this.PLAYER_NAME + ": " + e.getMessage() + ".");
-            this.tryToReconnect();
+            System.out.println(PLAYER_NAME + ": " + e.getMessage() + ".");
+            tryToReconnect();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -74,30 +74,33 @@ public class BattleShipClient extends Thread {
     }
 
     private void tryToReconnect() {
-        System.out.println(this.PLAYER_NAME + " will try to reconnect in 5 seconds... (" + this.reconnections + "/10)");
+        System.out.println(PLAYER_NAME + " will try to reconnect in 5 seconds... (" + RECONECTIONS + "/10)");
         try {
             Thread.sleep(5000); //milliseconds
         } catch (InterruptedException e) {
         }
 
-        if (this.reconnections < this.MAX_RECONNECTIONS) {
-            this.reconnections++;
-            this.connect();
+        if (RECONECTIONS < MAX_RECONNECTIONS) {
+            RECONECTIONS++;
+            connect();
         } else {
-            System.out.println(this.PLAYER_NAME + ": reconnection failed, exeeded max reconnection tries. Shutting down.");
-
+            System.out.println(PLAYER_NAME + ": reconnection failed, exeeded max reconnection tries. Shutting down.");
             System.exit(0);
             return;
         }
     }
 
     public void run() {
-        gameLogic.waitForGameStart();
+        GAME_LOGIC.waitForGameStart();
         try {
-            sleep((int) (1000));
+            sleep((int) (Math.random() * 100));
         } catch (InterruptedException e) {
         }
-        this.gui.enableAll();
-        gameLogic.placeShip();
+        System.out.println(PLAYER_NAME);
+        GAME_LOGIC.placeShip();
+        try {
+            sleep((int) (Math.random() * 100));
+        } catch (InterruptedException e) {
+        }
     }
 }

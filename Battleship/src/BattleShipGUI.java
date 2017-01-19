@@ -37,6 +37,7 @@ public class BattleShipGUI extends JFrame {
     private static final String YOU_LOST = "YOU LOST!!!";
     private static final String YOU_WON = "YOU WON!!!";
     private static final String ADDED_TEXT = " chosen.";
+    
     private String commandSt = "";
 
     private JLabel positionLabel;
@@ -67,7 +68,7 @@ public class BattleShipGUI extends JFrame {
         JPanel labelPanel = new JPanel();
         positionLabel = new JLabel(INITIAL_TEXT, JLabel.CENTER);
         JPanel buttonLeftPanel = new JPanel();
-        actionButton = new JButton("Execute");
+        actionButton = new JButton("SEND");
         Buttons.add(actionButton);
         actionButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -93,6 +94,7 @@ public class BattleShipGUI extends JFrame {
                     public void actionPerformed(ActionEvent ae) {
                         JButton but = (JButton) ae.getSource();
                         commandSt = but.getActionCommand();
+                        positionLabel.setText(commandSt + ADDED_TEXT);
                     }
                 });
                 buttonPanel.add(button);
@@ -107,23 +109,17 @@ public class BattleShipGUI extends JFrame {
         setVisible(true);
     }
 
-    public void enableAll() {
+    synchronized void changeButtonsState(Boolean state) {
         for (int i = 0; i < Buttons.size(); i++) {
-            Buttons.get(i).setEnabled(true);
+            Buttons.get(i).setEnabled(state);
         }
     }
     
-    public void disableAll() {
-        for (int i = 0; i < Buttons.size(); i++) {
-            Buttons.get(i).setEnabled(false);
-        }
+    synchronized void updateLabels(String newLabel){
+        setTitle(PLAYER_NAME + ": " + newLabel);
+        positionLabel.setText(newLabel);
     }
-
-    public void setStage() {
-        positionLabel.setText(WAIT_FOR_OTHER);
-        this.disableAll();
-    }
-
+    
     private void send(String s) {
         if (s.length() == 0) {
             int quit = JOptionPane.showConfirmDialog(null, "Exit chat");

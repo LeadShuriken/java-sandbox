@@ -1,9 +1,5 @@
-
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.*;
+import java.net.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,21 +13,21 @@ import java.util.logging.Logger;
 public class BattleShipServer extends Thread {
 
     public static int PORT = 8080;
+    public static BattleShipGameLogic gameLogic = null;
+    
     private ServerSocket welcomeSocket = null;
-    private BattleShipGameLogic gameLogic = null;
-
-    public BattleShipServer(BattleShipGameLogic gameLogic) {
-        this.gameLogic = gameLogic;
-        start();
-    }
 
     public static void main(String arg[]) throws Exception {
         BattleShipGameLogic gameLogic = new BattleShipGameLogic();
-
         BattleShipServer server = new BattleShipServer(gameLogic);
 
-        BattleShipClient client1 = new BattleShipClient(PORT, gameLogic);
-        BattleShipClient client2 = new BattleShipClient(PORT, gameLogic);
+        BattleShipClient client1 = new BattleShipClient(server.PORT);
+        BattleShipClient client2 = new BattleShipClient(server.PORT);
+    }
+    
+    public BattleShipServer(BattleShipGameLogic gameLogic) {
+        this.gameLogic = gameLogic;
+        start();
     }
 
     public void letClientIn() throws Exception {
