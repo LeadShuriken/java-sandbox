@@ -5,6 +5,9 @@
         <group>
             <file>file:/C:/Users/dsmis/Documents/NetBeansProjects/Battleship/src/BattleShipGameLogic.java</file>
             <file>file:/C:/Users/dsmis/Documents/NetBeansProjects/Battleship/src/BattleShipClient.java</file>
+            <file>file:/C:/Users/dsmis/Documents/NetBeansProjects/Battleship/src/BattleShipServer.java</file>
+            <file>file:/C:/Users/dsmis/Documents/NetBeansProjects/Battleship/src/BattleShipGUI.java</file>
+            <file>file:/C:/Users/dsmis/Documents/NetBeansProjects/Battleship/src/ServeOneClient.java</file>
         </group>
     </open-files>
 </project-private>

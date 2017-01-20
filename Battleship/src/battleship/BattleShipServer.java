@@ -17,9 +17,11 @@ public class BattleShipServer {
     /**
      * @param args
      */
+    static final String HOST_NAME = "localhost";
     static final int PORT = 8080;
 
     public static void main(String[] args) throws Exception {
+        
         ServerSocket welcomeSocket = new ServerSocket(PORT);
         ClientHandling clt = new ClientHandling();
 
@@ -110,15 +112,14 @@ public class BattleShipServer {
 //            System.out.println("Result from client: " + clientSentence);
 //
 //        }
+
         try {
-            while (true) {
-                // Blocks until a connection occurs:
+            boolean scanning = true;
+            while (scanning) {
                 Socket socket = welcomeSocket.accept();
                 try {
-                    new BattleShipClient(socket, clt);
-                } catch (IOException e) {
-                    // If it fails, close the socket,
-                    // otherwise the thread will close it:
+                    System.out.println("Socket Open");
+                } catch (Exception e) {
                     socket.close();
                 }
             }

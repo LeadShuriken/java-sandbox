@@ -15,28 +15,87 @@ import java.net.*;
 public class BattleShipClient extends Thread {
 
     private Socket socket;
+
+    String server;
+    int PORT;
+
     ClientHandling cltHandling;
+
     private BufferedReader in;
     private PrintWriter out;
 
-    public BattleShipClient(Socket c, ClientHandling clt) throws Exception {
-        
-        this.socket = c;
+    private boolean connected;
+
+    private static int MAX_RECONNECTIONS = 10;
+    private int reconnections = 0;
+
+    public BattleShipClient(ClientHandling clt, String server, int PORT) throws Exception {
+
+        this.PORT = PORT;
+        this.server = server;
         this.cltHandling = clt;
-        
-        in = new BufferedReader(
-                new InputStreamReader(
-                        socket.getInputStream()));
-        
-        out = new PrintWriter(new BufferedWriter(
-                new OutputStreamWriter(
-                        socket.getOutputStream()
-                )
-        ),true);
+
         start();
     }
 
+    private void connect() {
+
+        try {
+            this.socket = new Socket();
+            InetSocketAddress sa = new InetSocketAddress(this.server, this.PORT);
+            this.socket.connect(sa, 500);
+            this.connected = true;
+
+            this.in = new BufferedReader(
+                    new InputStreamReader(
+                            socket.getInputStream()));
+
+            this.out = new PrintWriter(new BufferedWriter(
+                    new OutputStreamWriter(
+                            socket.getOutputStream()
+                    )
+            ), true);
+        } catch (ConnectException e) {
+            System.out.println("Error while connecting. " + e.getMessage());
+            this.tryToReconnect();
+        } catch (SocketTimeoutException e) {
+            System.out.println("Connection: " + e.getMessage() + ".");
+            this.tryToReconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void disconnect() {
+        try {
+            this.socket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        };
+    }
+
+    private void tryToReconnect() {
+        this.disconnect();
+        System.out.println("I will try to reconnect in 10 seconds... (" + this.reconnections + "/10)");
+        try {
+            Thread.sleep(10000); //milliseconds
+        } catch (InterruptedException e) {
+        }
+
+        if (this.reconnections < this.MAX_RECONNECTIONS) {
+            this.reconnections++;
+            this.connect();
+        } else {
+            System.out.println("Reconnection failed, exeeded max reconnection tries. Shutting down.");
+            this.disconnect();
+            System.exit(0);
+            return;
+        }
+    }
+
     public void run() {
+        this.connect();
         try {
             while (true) {
                 String str = in.readLine();
@@ -58,90 +117,23 @@ public class BattleShipClient extends Thread {
         }
     }
 
-//		String ip = "127.0.0.1";
-//		String sentence;
-//		String modifiedSentence;
-//		Socket clientSocket;
-//		Socket hitOrMiss;
-//		String miss = "miss";
-//		String hit = "hit";
-//        //from command line
-//        BufferedReader inFromUser = new BufferedReader(
-//                new InputStreamReader(System.in));
-//
-//        //create the board
-//        Playground gameBoard = new Playground();
-//        //player is asked to add the ships to the board
-//        System.out.println("Below you can input where you want to"
-//                + " place your battleships.\n Please enter them in integers"
-//                + " starting with the row followed by columns\n (for example"
-//                + " start with the head as 11 for row 1,\n column 1 and "
-//                + " tail as 51 for row 5 and column 1)\nPlease input the data\n "
-//                + "left to right and top to bottom"
-//                + "Type q when done.");
-//        while (true) {
-//            System.out.println("Please enter head location:");
-//            String line1 = inFromUser.readLine();
-//            System.out.println("Please enter tail location:");
-//            String line2 = inFromUser.readLine();
-//            if (!line1.equals("q") || !line2.equals("q")) {
-//                int head = Integer.parseInt(line1);
-//                int tail = Integer.parseInt(line2);
-//                //we call the testPos method to verify that we can place
-//                //the battleship at the inputed locations
-//                gameBoard.testPos(head, tail);
-//                if (gameBoard.boatBool == true) {
-//                    gameBoard.createBoat(head, tail);
-//                    System.out.println("Creating boat at " + head + " and " + tail);
-//                } else {
-//                    System.out.println("Sorry, can't place the battleship using these locations.");
+//        try {
+//            while (true) {
+//                String str = in.readLine();
+//                if (str.equals("END")) {
+//                    break;
 //                }
-//            } else {
-//                break;
+//                System.out.println("Echoing: " + str);
+//                //out.println(str+" total:"+c.getC());
+//                cltHandling.sendC(str);
 //            }
-//        }
-//
-//        gameBoard.printBoard();
-//
-//        ////////////////////////////////////
-//        //game starts
-//        ////////////////////////////////////
-//        clientSocket = new Socket(ip, 6789);
-//        //from server	
-//        BufferedReader inFromServer = new BufferedReader(
-//                new InputStreamReader(clientSocket.getInputStream()));
-//        //out to server the hit or miss message
-//        DataOutputStream outToServer = new DataOutputStream(
-//                clientSocket.getOutputStream());
-//
-//        while (true) {
-//            int hitRow;
-//            int hitCol;
-//            //the client sends a hit
-//            sentence = inFromUser.readLine();
-//            outToServer.writeBytes(sentence + "\n");
-//            outToServer.flush();
-//            //the client receives a hit from the server
-//            modifiedSentence = inFromServer.readLine();
-//            System.out.println("Result from server: " + modifiedSentence);
-//
-//            modifiedSentence = inFromServer.readLine();
-//            System.out.println("Hit from server: " + modifiedSentence);
-//            int clientInt = Integer.parseInt(modifiedSentence);
-//            hitRow = Math.abs(clientInt / 10) - 1;
-//            hitCol = clientInt % 10 - 1;
-//
-//            if (gameBoard.testHit(hitRow, hitCol)) {
-//                gameBoard.testLoss();
-//                if (gameBoard.testLoss() == false) {
-//                    hit = miss = "You won!";
-//                    System.out.println("Sorry, you lost!");
-//                }
-//                outToServer.writeBytes(hit + "\n");
-//                outToServer.flush();
-//            } else {
-//                outToServer.writeBytes(miss + "\n");
-//                outToServer.flush();
+//            cltHandling.rmvC(out);
+//            System.out.println("closing...");
+//        } catch (IOException e) {
+//        } finally {
+//            try {
+//                socket.close();
+//            } catch (IOException e) {
 //            }
 //        }
 }

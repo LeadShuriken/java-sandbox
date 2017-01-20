@@ -3,54 +3,48 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import javax.swing.*;
-import java.util.*;
+import javax.swing.Timer;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
- * @author dsmis
+ * @author dsmis Class handling the GUI of the application.
  */
 public class BattleShipGUI extends JFrame {
 
     private ArrayList<JButton> Buttons = new ArrayList<JButton>();
-
+    private final JButton actionButton;
     private BufferedReader in;
     private PrintWriter out;
     private Socket socket;
 
-    private final int gridSize;
-    private final int[][] board;
-
     private String PLAYER_NAME;
-
-    private boolean boatBool;
-
-    private static final String INITIAL_TEXT = "Waiting for connection...";
-    private static final String WAIT_FOR_OTHER = "Waiting for the other player...";
-    private static final String PLACE_YOUR_SHIP = "Choose where to place your ship!";
-    private static final String MAKE_YOUR_CHOICE = "Choose where to strike";
-    private static final String YOU_LOST = "YOU LOST!!!";
-    private static final String YOU_WON = "YOU WON!!!";
-    private static final String ADDED_TEXT = " chosen.";
-    
     private String commandSt = "";
-
     private JLabel positionLabel;
-    private JButton actionButton;
+    private Timer timer;
+    private int counter;
 
-    public BattleShipGUI(String name, Socket socket, BufferedReader in, PrintWriter out) {
+    public final int gridSize;
+
+    public BattleShipGUI(String name, Socket socket, PrintWriter out, BufferedReader in) {
         this.PLAYER_NAME = name;
         this.socket = socket;
         this.out = out;
         this.in = in;
 
         this.gridSize = 3;
-        this.board = new int[gridSize][gridSize];
 
         this.setTitle(this.PLAYER_NAME);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,10 +60,9 @@ public class BattleShipGUI extends JFrame {
         leftPanel.setPreferredSize(new Dimension(200, 80));
 
         JPanel labelPanel = new JPanel();
-        positionLabel = new JLabel(INITIAL_TEXT, JLabel.CENTER);
+        positionLabel = new JLabel("Waiting for connection...", JLabel.CENTER);
         JPanel buttonLeftPanel = new JPanel();
         actionButton = new JButton("SEND");
-        Buttons.add(actionButton);
         actionButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 send(commandSt);
@@ -87,21 +80,20 @@ public class BattleShipGUI extends JFrame {
         buttonPanel.setLayout(new GridLayout(gridSize, gridSize, 10, 10));
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                JButton button = new JButton("[" + i + ", " + j + "]");
+                JButton button = new JButton("[" + i + "," + j + "]");
                 Buttons.add(button);
-                button.setActionCommand("[" + i + ", " + j + "]");
+                button.setActionCommand("[" + i + "," + j + "]");
                 button.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
                         JButton but = (JButton) ae.getSource();
                         commandSt = but.getActionCommand();
-                        positionLabel.setText(commandSt + ADDED_TEXT);
+                        positionLabel.setText(commandSt + " chosen.");
                     }
                 });
                 buttonPanel.add(button);
             }
         }
         contentPane.add(buttonPanel);
-
         setContentPane(contentPane);
         pack();
 
@@ -109,31 +101,66 @@ public class BattleShipGUI extends JFrame {
         setVisible(true);
     }
 
-    synchronized void changeButtonsState(Boolean state) {
-        for (int i = 0; i < Buttons.size(); i++) {
-            Buttons.get(i).setEnabled(state);
+    // Methid startign the timer for the application.
+    private void createTimer(Boolean state, BattleShipGameLogic g) {
+        if (state) {
+            counter = 11;
+            timer = new Timer(1000, new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    counter--;
+                    actionButton.setText(counter + "");
+                    if (counter == 0) {
+                        g.turnTimedOut(PLAYER_NAME);
+                        timer.stop();
+                    }
+                }
+            });
+            timer.start();
+        } else if (timer != null) {
+            actionButton.setText("WAIT");
+            timer.stop();
         }
     }
-    
-    synchronized void updateLabels(String newLabel){
+
+    // Method changing the buttons for the app.
+    public void changeButtonsState(Boolean state, ArrayList<String> shot, String placed, BattleShipGameLogic g) {
+        createTimer(state, g);
+        for (int i = 0; i < Buttons.size(); i++) {
+            JButton b = Buttons.get(i);
+            if ((shot != null && shot.contains(b.getText()))) {
+                b.setBackground(Color.red);
+            } else if (placed != null && placed.equals(b.getText())) {
+                b.setBackground(Color.green);
+                b.setEnabled(false);
+            } else {
+                b.setBackground(Color.lightGray);
+                b.setEnabled(state);
+            };
+        }
+        actionButton.setEnabled(state);
+    }
+
+    // Method changing the labels for the user panel.
+    public void updateLabels(String newLabel) {
         setTitle(PLAYER_NAME + ": " + newLabel);
         positionLabel.setText(newLabel);
     }
-    
-    private void send(String s) {
-        if (s.length() == 0) {
-            int quit = JOptionPane.showConfirmDialog(null, "Exit chat");
-            if (quit == 0) {
-                out.println("END");
-                System.out.println("closing...");
 
-                try {
-                    socket.close();
-                } catch (Exception expt) {
-                    System.out.println(expt);
-                }
-                System.exit(0);
+    // Method handlign the resend of the Clien messeges.
+    public void send(String s) {
+        String[] a = s.split(":");
+        if (a.length > 1 && a[1].equals("END")) {
+            out.println("END");
+            System.out.println(this.PLAYER_NAME + " was taken down...");
+            System.out.println("Congratulations..." + s.split(":")[0]);
+            System.out.println("closing...");
+
+            try {
+                socket.close();
+            } catch (Exception expt) {
+                System.out.println(expt);
             }
+            System.exit(0);
         } else {
             out.println(this.PLAYER_NAME + ":" + s);
         }

@@ -1,22 +1,26 @@
-import java.io.*;
-import java.net.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+import java.io.*;
+import java.net.*;
+
 /**
  *
- * @author dsmis
+ * @author dsmis Method created to report to TCP request and open sockets for
+ * communication with clients and such.
  */
 public class BattleShipServer extends Thread {
 
-    public static int PORT = 8080;
-    public static BattleShipGameLogic gameLogic = null;
-    
-    private ServerSocket welcomeSocket = null;
+    public static int PORT = 8080; // The port where the class listens.
+    private ServerSocket welcomeSocket = null; // The the yielding open socket.
 
+    public static BattleShipGameLogic gameLogic = null;
+
+    // Bootstrap for quick launch of the application.
     public static void main(String arg[]) throws Exception {
         BattleShipGameLogic gameLogic = new BattleShipGameLogic();
         BattleShipServer server = new BattleShipServer(gameLogic);
@@ -30,6 +34,7 @@ public class BattleShipServer extends Thread {
         start();
     }
 
+    // Method opening sockets for the clients.
     public void letClientIn() throws Exception {
         while (!gameLogic.getGameStatus()) {
             try {
