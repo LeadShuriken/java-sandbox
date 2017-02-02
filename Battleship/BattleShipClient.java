@@ -6,11 +6,13 @@
 
 import java.net.*;
 import java.io.*;
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
 /**
- *
- * @author dsmis The client of the application.
+ * @author dsmis
+ * @member default
+ * @name BattleShipClient
+ * @description A thread acting as the client/user of the application.
  */
 public class BattleShipClient extends Thread {
 
@@ -23,6 +25,8 @@ public class BattleShipClient extends Thread {
     private BattleShipGUI GUI;
     private String PLAYER_NAME;
 
+    private String PLACE_MESSEGE = "Place your ship...";
+
     // CONNECTION/RECONNECTION HANDLERS // 
     private static int MAX_RECONNECTIONS = 10;
     private int RECONECTIONS = 0;
@@ -32,17 +36,30 @@ public class BattleShipClient extends Thread {
 
     public static int counter;
 
+    /**
+     * @author dsmis
+     * @member BattleShipClient
+     * @name BattleShipClient
+     * @description Constructor
+     * @param hostName {String} the host name to connect to
+     * @param int {int} the port name to connect to
+     */
     BattleShipClient(String hostName, int port) {
-        //this.PLAYER_NAME = JOptionPane.showInputDialog("Enter a new name.");
+        this.PLAYER_NAME = JOptionPane.showInputDialog("Enter a new name.");
         this.HOSTNAME = hostName;
         this.PORT = port;
-        this.PLAYER_NAME = "a" + counter++;
         if (this.PLAYER_NAME != null) {
-            connect();
+            start();
         }
     }
 
-    private synchronized void connect() {
+    /**
+     * @author dsmis
+     * @member BattleShipClient
+     * @name connect
+     * @description Method handling the connect and bootstrap to the server
+     */
+    private void connect() {
         try {
             InetAddress addr = InetAddress.getByName(HOSTNAME);
             socket = new Socket(addr, PORT);
@@ -52,10 +69,8 @@ public class BattleShipClient extends Thread {
 
             out = new PrintWriter(new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream())), true);
-
             GUI = new BattleShipGUI(PLAYER_NAME, out);
-            out.println("NAME:" + PLAYER_NAME);
-            start();
+            GAME_IS_ON = true;
         } catch (ConnectException e) {
             System.out.println(PLAYER_NAME + ": Error while connecting. " + e.getMessage());
             tryToReconnect();
@@ -69,10 +84,16 @@ public class BattleShipClient extends Thread {
         }
     }
 
-    private synchronized void tryToReconnect() {
+    /**
+     * @author dsmis
+     * @member BattleShipClient
+     * @name tryToReconnect
+     * @description Method handling reconnection attempts
+     */
+    private void tryToReconnect() {
         System.out.println(PLAYER_NAME + " will try to reconnect in 5 seconds... (" + RECONECTIONS + "/10)");
         try {
-            Thread.sleep(5000); //milliseconds
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
         }
 
@@ -86,89 +107,63 @@ public class BattleShipClient extends Thread {
         }
     }
 
-    private synchronized void listenForGUIMesseges() {
-        try {
-            while (true) {
-                String cmd0 = in.readLine();
-                String[] commands0 = cmd0.split(":");
-                System.out.println(commands0[1]);
-                if (commands0[0].equals(PLAYER_NAME) && commands0[1].equals("CHANGE_BUTTONS_STATE")) {
-                    Boolean condON = Boolean.parseBoolean(commands0[2]);
-//                    ArrayList<String> = new ArrayList<String>(commands[3]);
-                    GUI.changeButtonsState(condON, null);
-                    break;
-                }
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    private synchronized void waitForPlayerChoice() {
-        while (!GUI.END_TURN) {
-            try {
-                wait(100);
-            } catch (InterruptedException e) {
-                System.err.println(e);
-            }
-        }
-//        GUI.changeButtonsState(false, null);
-    }
-
-    private synchronized void listenToServer() {
+    /**
+     * @author dsmis
+     * @member BattleShipClient
+     * @name listenToServer
+     * @description Method listening for incoming server input while the game is
+     * on.
+     */
+    private void listenToServer() {
         while (GAME_IS_ON) {
             try {
                 String str = in.readLine();
                 if (str.equals("GAME_IS_OFF")) {
                     GAME_IS_ON = false;
+                } else if (str.equals("CLEAR_PLACED")) {
+                    GUI.switchButtonsLock(false);
+                    GUI.resetButtons();
+                    PLACE_MESSEGE = "SAME PLACE ..try again...";
+                } else if (str.equals("END_TURN")) {
+                    GUI.switchButtonsLock(false);
+                    GUI.resetButtons();
+                    PLACE_MESSEGE = "SAME PLACE ..try again...";
                 } else {
                     String[] commands0 = str.split(":");
-                    if (commands0[0].equals(PLAYER_NAME)) {
-                        if (commands0[1].equals("CHANGE_BUTTONS_STATE")) {
-                            Boolean condON = Boolean.parseBoolean(commands0[2]);
-                            //ArrayList<String> = new ArrayList<String>(commands[3]);
-                            GUI.changeButtonsState(condON, null);
-                            if (condON) {
-                                waitForPlayerChoice();
-                            }
-                        } else if (commands0[1].equals("STAGE_PLACE")) {
-                            GUI.STAGE_PLACE = true;
-                        } else if (commands0[1].equals("STAGE_SHOOT")) {
-                            GUI.STAGE_PLACE = false;
-                            GUI.STAGE_SHOOT = true;
-                        }
+                    if (commands0[1].equals("STAGE_PLACE")) {
+                        GUI.updateLabels(PLACE_MESSEGE);
+                        GUI.STAGE_PLACE = true;
+                        GUI.switchButtonsLock(true);
+                    } else if (commands0[1].equals("STAGE_SHOOT")) {
+                        GUI.updateLabels("Shoot somewhere...");
+                        GUI.STAGE_PLACE = false;
+                        GUI.STAGE_SHOOT = true;
+                        GUI.switchButtonsLock(true);
+                    } else if (commands0[1].equals("SET_WAITING")) {
+                        GUI.updateLabels("Wait for the other player...");
+                        GUI.switchButtonsLock(false);
+                    } else if (commands0[1].equals("SHOT_AT")) {
+                        GUI.placeShot(commands0[2]);
                     }
                 }
-                wait(100);
+
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 System.err.println(e);
             } catch (IOException e) {
                 System.err.println(e);
             }
         }
-        GUI.changeButtonsState(false, null);
+        GUI.switchButtonsLock(false);
         try {
             socket.close();
         } catch (Exception e) {
         }
     }
 
-    private synchronized void confirmCondition(String condition) {
-        try {
-            while (true) {
-                String str = in.readLine();
-                if (str.equals(condition)) {
-                    if (condition.equals("GAME_IS_ON")) {
-                        GAME_IS_ON = true;
-                    }
-                    break;
-                }
-            }
-        } catch (Exception e) {
-        }
-    }
-
+    @Override
     public void run() {
-        confirmCondition("GAME_IS_ON");
+        connect();
         listenToServer();
     }
 }
