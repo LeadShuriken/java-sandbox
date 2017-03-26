@@ -6,12 +6,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>JSPD_CRUD_SAMPLE</title>
 <style type="text/css">
-    <%@include file="bootstrap/css/bootstrap.css" %>
-    <%@include file="bootstrap/css/bootstrap-theme.css" %>
+	<%@include file="styles/main.css" %>
+    <%@include file="bootstrap/css/bootstrap.min.css" %>
+    <%@include file="bootstrap/css/bootstrap-theme.min.css" %>
 </style>
 </head>
 <body>
-	<a href="adduserform.jsp">Add User</a>
-	<a href="viewusers.jsp">View Users</a>
+	<input type="button" class="btn btn-info" value="Add User" onclick="location.href = 'jspForms/adduserform.jsp';">
+	<input type="button" class="btn btn-info" value="View Users" onclick="location.href = 'jspTables/viewusers.jsp';">
 </body>
 </html>

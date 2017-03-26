@@ -1,17 +1,17 @@
 package crudHandling;
 
 /**
- * class UserPOJO
+ * class UserBEAN
  * <p>
- * A Simple POJO handling current user data. 
+ * A Simple BEAN handling current user data. 
  */
-public class UserPOJO {
+public class UserBEAN {
 	private int id;
 	private String name;
 	private String password;
 	private String email;
 
-	public UserPOJO() {
+	public UserBEAN() {
 	}
 	
 	public int getId() {

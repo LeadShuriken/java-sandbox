@@ -5,6 +5,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Add User Form</title>
+<style type="text/css">
+	<%@include file="../styles/main.css" %>
+    <%@include file="../bootstrap/css/bootstrap.min.css" %>
+    <%@include file="../bootstrap/css/bootstrap-theme.min.css" %>
+</style>
 </head>
 <body>
 	<jsp:include page="userform.html"></jsp:include>

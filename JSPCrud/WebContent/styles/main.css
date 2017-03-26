@@ -1,0 +1,19 @@
+@CHARSET "ISO-8859-1";
+
+* {
+	margin: 2px;
+	text-align: left !important;
+}
+
+h1 {
+	left: 1%;
+	position: relative;
+}
+
+input {
+	max-width: 500px;
+}
+
+#tableLable {
+	background-color: gray;
+}

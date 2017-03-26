@@ -22,27 +22,6 @@ public class SimpleCrud {
 	private static Connection conn = null;
 	private static PreparedStatement stmt = null;
 
-	SimpleCrud() {
-	}
-
-	// public static void main(String[] args) {
-	// // TODO Auto-generated method stub
-	// SimpleCrud a = new SimpleCrud("username", "password", "crud_sample");
-	// a.bootStrapDatabase();
-	//
-	// try {
-	// a.insert(); // aka CREATE;
-	// a.select(); // aka READ;
-	// a.update(); // aka UPDATE;
-	// a.delete(); // aka DELETE;
-	//// a.dropDatabase();
-	// } catch (SQLException ex) {
-	// ex.printStackTrace();
-	// } finally {
-	// a.disconnect();
-	// }
-	// }
-
 	/**
 	 * bootStrapDatabase() : void()
 	 * <p>
@@ -111,7 +90,7 @@ public class SimpleCrud {
 	}
 
 	/**
-	 * insert(UserPOJO currentUser) : void()
+	 * insert(UserBEAN currentUser) : void()
 	 * <p>
 	 * This method inserts the current user in the table CRUD - CREATE
 	 * 
@@ -120,7 +99,7 @@ public class SimpleCrud {
 	 * 
 	 * @return Integer representing the success/failure state of the query
 	 */
-	public static int insert(UserPOJO currentUser) {
+	public static int insert(UserBEAN currentUser) {
 		int rowsInserted = 0;
 		try {
 			if (conn == null) {
@@ -147,7 +126,7 @@ public class SimpleCrud {
 	}
 
 	/**
-	 * update(UserPOJO currentUser) : void()
+	 * update(UserBEAN currentUser) : void()
 	 * <p>
 	 * This method updates the mail and pass of the current user in the table
 	 * CRUD - UPDATE
@@ -157,7 +136,7 @@ public class SimpleCrud {
 	 * 
 	 * @return Integer representing the success/failure state of the query
 	 */
-	public static int update(UserPOJO currentUser) {
+	public static int update(UserBEAN currentUser) {
 		int rowsUpdated = 0;
 		try {
 			if (conn == null) {
@@ -185,7 +164,7 @@ public class SimpleCrud {
 	}
 
 	/**
-	 * delete(UserPOJO currentUser)
+	 * delete(UserBEAN currentUser)
 	 * <p>
 	 * This method deletes the current user from the table CRUD - DELETE
 	 * 
@@ -194,7 +173,7 @@ public class SimpleCrud {
 	 * 
 	 * @return Integer representing the success/failure state of the query
 	 */
-	public static int delete(UserPOJO currentUser) {
+	public static int delete(UserBEAN currentUser) {
 		int rowsDeleted = 0;
 		try {
 			if (conn == null) {
@@ -208,7 +187,7 @@ public class SimpleCrud {
 
 			rowsDeleted = stmt.executeUpdate();
 			if (rowsDeleted > 0) {
-				System.out.println("User named '" + currentUser.getName() + "' was deleted...");
+				System.out.println("User with id :'" + currentUser.getId() + "' was deleted...");
 			}
 		} catch (SQLException e) {
 			System.out.println(e);
@@ -227,10 +206,10 @@ public class SimpleCrud {
 	 * @param id
 	 *            The id of the user to fetch from the database
 	 * 
-	 * @return UserPOJO The selected user
+	 * @return UserBEAN The selected user
 	 */
-	public static UserPOJO selectUserById(int id) {
-		UserPOJO u = null;
+	public static UserBEAN selectUserById(int id) {
+		UserBEAN u = null;
 		try {
 			if (conn == null) {
 				bootStrapDatabase();
@@ -247,7 +226,7 @@ public class SimpleCrud {
 				String pass = result.getString("password");
 				String email = result.getString("email");
 
-				u = new UserPOJO();
+				u = new UserBEAN();
 				u.setId(newId);
 				u.setName(name);
 				u.setPassword(pass);
@@ -269,10 +248,10 @@ public class SimpleCrud {
 	 * <p>
 	 * This method fetches all the users from the DB CRUD - READ
 	 * 
-	 * @return List<UserPOJO> The selected users
+	 * @return List<UserBEAN> The selected users
 	 */
-	public static List<UserPOJO> getAllRecords() throws SQLException {
-		List<UserPOJO> list = new ArrayList<UserPOJO>();
+	public static List<UserBEAN> getAllRecords() throws SQLException {
+		List<UserBEAN> list = new ArrayList<UserBEAN>();
 		try {
 			if (conn == null) {
 				bootStrapDatabase();
@@ -281,7 +260,7 @@ public class SimpleCrud {
 			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users");
 			ResultSet result = stmt.executeQuery();
 			while (result.next()) {
-				UserPOJO u = new UserPOJO();
+				UserBEAN u = new UserBEAN();
 				u.setId(result.getInt("id"));
 				u.setName(result.getString("username"));
 				u.setPassword(result.getString("password"));
