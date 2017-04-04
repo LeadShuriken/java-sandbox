@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.simplecrud.handling.UserPOJO" table="users">
+        <id name="id" type="int" column="id">
+            <generator class="native" />
+        </id>
+        <property name="name" column="name" type="string"/>
+        <property name="password" column="password" type="string"/>
+        <property name="email" column="email" type="string"/>
+    </class>
+</hibernate-mapping>
