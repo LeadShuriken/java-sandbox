@@ -1,0 +1,24 @@
+{
+	"type": "School",
+	"name": "School1",
+	"begin_date": 2020,
+	"teachers": [
+		{
+			"name": "John1"
+		},
+		{
+			"name": "Jack1"
+		},
+		{
+			"name": "Mary1"
+		}
+	],
+	"students": [
+		{
+			"name": "Peter1"
+		},
+		{
+			"name": "Patric1"
+		}
+	]
+}

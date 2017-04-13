@@ -1,0 +1,24 @@
+{
+	"type": "Kindergarder",
+	"name": "Kindergarder1",
+	"begin_date": 1500,
+	"teachers": [
+		{
+			"name": "Anny1"
+		}
+	],
+	"students": [
+		{
+			"name": "Paul2"
+		},
+		{
+			"name": "Dennis1"
+		},
+		{
+			"name": "Martin1"
+		},
+		{
+			"name": "Vicky1"
+		}
+	]
+}

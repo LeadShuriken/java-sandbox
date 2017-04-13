@@ -1,0 +1,31 @@
+[ {
+  "beginDate" : 1000,
+  "name" : "Kindergarder1",
+  "studentsNumber" : 4,
+  "teachersNumber" : 1
+}, {
+  "beginDate" : 1500,
+  "name" : "Kindergarder1",
+  "studentsNumber" : 4,
+  "teachersNumber" : 1
+}, {
+  "beginDate" : 1985,
+  "name" : "School1",
+  "studentsNumber" : 2,
+  "teachersNumber" : 3
+}, {
+  "beginDate" : 2000,
+  "name" : "School2",
+  "studentsNumber" : 3,
+  "teachersNumber" : 2
+}, {
+  "beginDate" : 2000,
+  "name" : "School2",
+  "studentsNumber" : 3,
+  "teachersNumber" : 2
+}, {
+  "beginDate" : 2020,
+  "name" : "School1",
+  "studentsNumber" : 2,
+  "teachersNumber" : 3
+} ]

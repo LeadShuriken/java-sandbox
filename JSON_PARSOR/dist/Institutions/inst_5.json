@@ -1,0 +1,24 @@
+{
+	"type": "School",
+	"name": "School2",
+	"begin_date": 2000,
+	"teachers": [
+		{
+			"name": "John2"
+		},
+		{
+			"name": "Mary2"
+		}
+	],
+	"students": [
+		{
+			"name": "Peter2"
+		},
+		{
+			"name": "Patric2"
+		},
+		{
+			"name": "Paul1"
+		}
+	]
+}
