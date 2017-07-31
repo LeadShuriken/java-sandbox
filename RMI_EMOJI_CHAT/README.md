@@ -2,7 +2,7 @@
 
 ## Introduction.
 
-„RMI Client/Server Chat Application“ is an aplication based on RMI (JAVA Remote Method Invocation). This application gives the posibility for many clients to communicat between each other while still using server resources (in this case downloadable emoji images). The application has a basic user interface made with java swing and is made as a delivarable for a university course from the masters of Software Dev. for the Internet in "New Bulgarian University" Sofia.
+â€žRMI Client/Server Chat Applicationâ€œ is an aplication based on RMI (JAVA Remote Method Invocation). This application gives the posibility for many clients to communicat between each other while still using server resources (in this case downloadable emoji images). The application has a basic user interface made with java swing and is made as a delivarable for a university course from the masters of Software Dev. for the Internet in "New Bulgarian University" Sofia.
 
 ## Program flow
 
@@ -31,11 +31,11 @@ With each client having a local emoji database the practical data sharing happen
 ## TODO
 While most of the bellow are outside of the scope of RMI they need to be pointed out as they are to be DONE and are now a serious hinder to the use of the application (commercilly)
 
-•	Serialisiation and save of local application state (associations and such)
-•	Panel for reference of whom is in the chat.
-•	Personal messege to user. 
-•	Posibility to save a group of emoji/image and their association(if they use any).
-•	Panel for adding images other then emoji (gif/png).
-•	Video and audio chat (real easy with RMI).
-•	Codebase URI for full remote functionality of the RMI.
+â€¢	Serialisiation and save of local application state (associations and such)
+â€¢	Panel for reference of whom is in the chat.
+â€¢	Personal messege to user. 
+â€¢	Posibility to save a group of emoji/image and their association(if they use any).
+â€¢	Panel for adding images other then emoji (gif/png).
+â€¢	Video and audio chat (real easy with RMI).
+â€¢	Codebase URI for full remote functionality of the RMI.
 
