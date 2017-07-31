@@ -1,0 +1,7 @@
+grant {
+     	permission java.security.AllPermission;
+  };
+  
+  grant codeBase "file:/C:/Users/dsmis/workspace/IMF219-Chat" {
+  	permission java.security.AllPermission;
+};
