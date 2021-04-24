@@ -7,7 +7,7 @@
 - [ALGORITHMS](https://github.com/LeadShuriken/java-sandbox/tree/master/Algorithms) - Must be Hacker Rank, I can't remember.
 - [BATTLESHIP_SOCKETS](https://github.com/LeadShuriken/java-sandbox/tree/master/BATTLESHIP_SOCKETS) - Concurent Java Socket implementation of the Battleships Game.
 - [DATA_STRUCTURES](https://github.com/LeadShuriken/java-sandbox/tree/master/DATA_STRUCTURES) - Hacker Rank again.
-- [JSON_PARSOR](https://github.com/LeadShuriken/java-sandbox/tree/master/JSON_PARSOR) - JSON to POJO Convertor.
+- [JSON_PARSOR](https://github.com/LeadShuriken/java-sandbox/tree/master/JSON_PARSOR) - JSON to POJO Props Parser(with an O).
 - [JSP_HIBERNATE_CRUD](https://github.com/LeadShuriken/java-sandbox/tree/master/JSP_HIBERNATE_CRUD) - JSP and HIBERNATE Bootstrap.
 - [JSP_JDBC_CRUD](https://github.com/LeadShuriken/java-sandbox/tree/master/JSP_JDBC_CRUD) - Above Sample Without JSP with JDBC(Better).
 - [RMI_EMOJI_CHAT](https://github.com/LeadShuriken/java-sandbox/tree/master/RMI_EMOJI_CHAT) - Java Remote Method Invocation Chat App.
