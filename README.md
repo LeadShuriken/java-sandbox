@@ -1,12 +1,18 @@
-# Java Development Samples
+# Java Development Sandbox Unalocated Samples
 
-> Make jar not war!
-
-[D.Mishev Portfolio](http://birdyportfolio.com/)
+> Make jar not war! Boy oh boy
 
 ## Java examples
 
-These examples are created to demonstrate proficiency in java as technology and show understanding of how JAVA and the used set of additional techonolies operate.
+- [ALGORITHMS](https://github.com/LeadShuriken/java-sandbox/tree/master/Algorithms) - Must be Hacker Rank, I can't remember.
+- [BATTLESHIP_SOCKETS](https://github.com/LeadShuriken/java-sandbox/tree/master/BATTLESHIP_SOCKETS) - Concurent Java Socket implementation of the Battleships Game.
+- [DATA_STRUCTURES](https://github.com/LeadShuriken/java-sandbox/tree/master/DATA_STRUCTURES) - Hacker Rank again.
+- [JSON_PARSOR](https://github.com/LeadShuriken/java-sandbox/tree/master/JSON_PARSOR) - JSON to POJO ORM.
+- [JSP_HIBERNATE_CRUD](https://github.com/LeadShuriken/java-sandbox/tree/master/JSP_HIBERNATE_CRUD) - JSP and HIBERNATE Bootstrap.
+- [JSP_JDBC_CRUD](https://github.com/LeadShuriken/java-sandbox/tree/master/JSP_JDBC_CRUD) - Above Sample Without JSP with JDBC(Better).
+- [RMI_EMOJI_CHAT](https://github.com/LeadShuriken/java-sandbox/tree/master/RMI_EMOJI_CHAT) - Java Remote Method Invocation Chat App.
+- [RAIN](https://github.com/LeadShuriken/java-sandbox/blob/master/Rain/src/rain/Rain.java) - Some sort of game I was trying to make with AWT.
+- [SOCKET_TEASER](https://github.com/LeadShuriken/java-sandbox/tree/master/SOCKET_TEASER) - Some fail I was having in a university test that must have been enlightening. Sadly I have to dig in again to see why.
 
 ### Tech
 
@@ -23,10 +29,5 @@ The following technologies are used in the samples provided:
 * [JSON](http://www.json.org/) - JAVA JSON Handling
 * [JAV IO](https://docs.oracle.com/javase/7/docs/api/java/io/package-summary.html) - Java Input/Output Handling
 * [Java Swing](https://en.wikipedia.org/wiki/Swing_(Java)) - Java Swing Framework
-
-### Todos
-
- - Spring
- - 
 
 **Free Software, Hell Yeah!**
